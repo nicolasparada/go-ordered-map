@@ -86,13 +86,13 @@ func TestOrderedMap_Clear(t *testing.T) {
 	assert.Equal(t, OrderedMap[string, any]{}, m)
 }
 
-func TestOrderedMap_Copy(t *testing.T) {
+func TestOrderedMap_Clone(t *testing.T) {
 	m := OrderedMap[string, any]{
 		{"name", "John"},
 		{"age", 30},
 	}
 
-	c := m.Copy()
+	c := m.Clone()
 	assert.Equal(t, m, c)
 
 	c.Set("name", "Jane")
@@ -112,4 +112,18 @@ func TestOrderedMap_Equal(t *testing.T) {
 
 	m2.Set("name", "Jane")
 	assert.False(t, m1.Equal(m2))
+}
+
+func TestOrderedMap_DeepCopyInto(t *testing.T) {
+	m := OrderedMap[string, any]{
+		{"name", "John"},
+		{"age", 30},
+	}
+
+	var c OrderedMap[string, any]
+	m.DeepCopyInto(&c)
+	assert.Equal(t, m, c)
+
+	c.Set("name", "Jane")
+	assert.NotEqual(t, m, c)
 }

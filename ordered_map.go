@@ -87,7 +87,7 @@ func (m *OrderedMap[K, V]) Clear() {
 	*m = []Pair[K, V]{}
 }
 
-func (m OrderedMap[K, V]) Copy() OrderedMap[K, V] {
+func (m OrderedMap[K, V]) Clone() OrderedMap[K, V] {
 	if m == nil {
 		return nil
 	}
@@ -107,4 +107,17 @@ func (m OrderedMap[K, V]) Equal(other OrderedMap[K, V]) bool {
 	}
 
 	return true
+}
+
+func (m OrderedMap[K, V]) DeepCopyInto(out *OrderedMap[K, V]) {
+	if out == nil {
+		return
+	}
+
+	if m == nil {
+		*out = nil
+		return
+	}
+
+	*out = m.Clone()
 }
