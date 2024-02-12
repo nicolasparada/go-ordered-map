@@ -7,6 +7,10 @@ type Pair[K comparable, V any] struct {
 	Val V
 }
 
+func (p Pair[K, V]) Equal(other Pair[K, V]) bool {
+	return p.Key == other.Key && any(p.Val) == any(other.Val)
+}
+
 func New[K comparable, V any]() OrderedMap[K, V] {
 	return OrderedMap[K, V]{}
 }
@@ -89,4 +93,18 @@ func (m OrderedMap[K, V]) Copy() OrderedMap[K, V] {
 	}
 
 	return append([]Pair[K, V]{}, m...)
+}
+
+func (m OrderedMap[K, V]) Equal(other OrderedMap[K, V]) bool {
+	if len(m) != len(other) {
+		return false
+	}
+
+	for i, p := range m {
+		if !p.Equal(other[i]) {
+			return false
+		}
+	}
+
+	return true
 }

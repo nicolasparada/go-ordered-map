@@ -98,3 +98,18 @@ func TestOrderedMap_Copy(t *testing.T) {
 	c.Set("name", "Jane")
 	assert.NotEqual(t, m, c)
 }
+
+func TestOrderedMap_Equal(t *testing.T) {
+	m1 := OrderedMap[string, any]{
+		{"name", "John"},
+		{"age", 30},
+	}
+	m2 := OrderedMap[string, any]{
+		{"name", "John"},
+		{"age", 30},
+	}
+	assert.True(t, m1.Equal(m2))
+
+	m2.Set("name", "Jane")
+	assert.False(t, m1.Equal(m2))
+}
