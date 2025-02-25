@@ -1,4 +1,4 @@
-package orderedmap
+package omap
 
 import (
 	"fmt"
@@ -8,12 +8,12 @@ import (
 
 // MarshalYAML implements yaml.Marshaler interface
 // to marshall a sorted list of properties into an object.
-func (pp OrderedMap[K, V]) MarshalYAML() (any, error) {
-	if pp == nil {
+func (om Map[K, V]) MarshalYAML() (any, error) {
+	if om == nil {
 		return nil, nil
 	}
 
-	if len(pp) == 0 {
+	if len(om) == 0 {
 		return []any{}, nil
 	}
 
@@ -21,7 +21,7 @@ func (pp OrderedMap[K, V]) MarshalYAML() (any, error) {
 		Kind: yaml.MappingNode,
 	}
 
-	for _, p := range pp {
+	for _, p := range om {
 		valueNode := &yaml.Node{}
 		if err := valueNode.Encode(p.Val); err != nil {
 			return nil, fmt.Errorf("yaml encode property value: %w", err)
@@ -29,7 +29,7 @@ func (pp OrderedMap[K, V]) MarshalYAML() (any, error) {
 
 		node.Content = append(node.Content, &yaml.Node{
 			Kind:  yaml.ScalarNode,
-			Value: keyAsString[K](p.Key),
+			Value: keyAsString(p.Key),
 		}, valueNode)
 	}
 
@@ -38,7 +38,7 @@ func (pp OrderedMap[K, V]) MarshalYAML() (any, error) {
 
 // UnmarshalYAML implements yaml.Unmarshaler interface
 // to unmarshal an object into a sorted list of properties.
-func (pp *OrderedMap[K, V]) UnmarshalYAML(node *yaml.Node) error {
+func (om *Map[K, V]) UnmarshalYAML(node *yaml.Node) error {
 	d := len(node.Content)
 	if d%2 != 0 {
 		return fmt.Errorf("expected even items for key-value")
@@ -57,7 +57,7 @@ func (pp *OrderedMap[K, V]) UnmarshalYAML(node *yaml.Node) error {
 			return fmt.Errorf("yaml decode property value: %w", err)
 		}
 
-		*pp = append(*pp, pair)
+		*om = append(*om, pair)
 	}
 
 	return nil
@@ -65,12 +65,12 @@ func (pp *OrderedMap[K, V]) UnmarshalYAML(node *yaml.Node) error {
 
 func keyAsString[K comparable](key K) string {
 	switch key := any(key).(type) {
+	case fmt.Stringer:
+		return key.String()
 	case string:
 		return key
 	case []byte:
 		return string(key)
-	case fmt.Stringer:
-		return key.String()
 	default:
 		return fmt.Sprintf("%v", key)
 	}

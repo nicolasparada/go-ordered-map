@@ -1,4 +1,4 @@
-package orderedmap
+package omap
 
 import (
 	"testing"
@@ -6,8 +6,8 @@ import (
 	"github.com/alecthomas/assert/v2"
 )
 
-func TestOrderedMap_Has(t *testing.T) {
-	m := OrderedMap[string, any]{
+func TestMap_Has(t *testing.T) {
+	m := Map[string, any]{
 		{"name", "John"},
 		{"age", 30},
 	}
@@ -16,8 +16,8 @@ func TestOrderedMap_Has(t *testing.T) {
 	assert.False(t, m.Has("active"))
 }
 
-func TestOrderedMap_Get(t *testing.T) {
-	m := OrderedMap[string, any]{
+func TestMap_Get(t *testing.T) {
+	m := Map[string, any]{
 		{"name", "John"},
 		{"age", 30},
 	}
@@ -37,93 +37,26 @@ func TestOrderedMap_Get(t *testing.T) {
 	}
 }
 
-func TestOrderedMap_Set(t *testing.T) {
-	m := OrderedMap[string, any]{}
+func TestMap_Set(t *testing.T) {
+	m := Map[string, any]{}
 	m.Set("name", "John")
 	m.Set("age", 30)
 
-	assert.Equal(t, OrderedMap[string, any]{
+	assert.Equal(t, Map[string, any]{
 		{"name", "John"},
 		{"age", 30},
 	}, m)
 }
 
-func TestOrderedMap_Delete(t *testing.T) {
-	m := OrderedMap[string, any]{
+func TestMap_Delete(t *testing.T) {
+	m := Map[string, any]{
 		{"name", "John"},
 		{"age", 30},
 	}
 
 	m.Delete("name")
 
-	assert.Equal(t, OrderedMap[string, any]{
+	assert.Equal(t, Map[string, any]{
 		{"age", 30},
 	}, m)
-}
-
-func TestOrderedMap_Keys(t *testing.T) {
-	m := OrderedMap[string, any]{
-		{"name", "John"},
-		{"age", 30},
-	}
-	assert.Equal(t, []string{"name", "age"}, m.Keys())
-}
-
-func TestOrderedMap_Values(t *testing.T) {
-	m := OrderedMap[string, any]{
-		{"name", "John"},
-		{"age", 30},
-	}
-	assert.Equal(t, []any{"John", 30}, m.Values())
-}
-
-func TestOrderedMap_Clear(t *testing.T) {
-	m := OrderedMap[string, any]{
-		{"name", "John"},
-		{"age", 30},
-	}
-	m.Clear()
-	assert.Equal(t, OrderedMap[string, any]{}, m)
-}
-
-func TestOrderedMap_Clone(t *testing.T) {
-	m := OrderedMap[string, any]{
-		{"name", "John"},
-		{"age", 30},
-	}
-
-	c := m.Clone()
-	assert.Equal(t, m, c)
-
-	c.Set("name", "Jane")
-	assert.NotEqual(t, m, c)
-}
-
-func TestOrderedMap_Equal(t *testing.T) {
-	m1 := OrderedMap[string, any]{
-		{"name", "John"},
-		{"age", 30},
-	}
-	m2 := OrderedMap[string, any]{
-		{"name", "John"},
-		{"age", 30},
-	}
-	assert.True(t, m1.Equal(m2))
-
-	m2.Set("name", "Jane")
-	assert.False(t, m1.Equal(m2))
-}
-
-func TestOrderedMap_DeepCopyInto(t *testing.T) {
-	m := OrderedMap[string, any]{
-		{"name", "John"},
-		{"age", 30},
-	}
-
-	var c OrderedMap[string, any]
-	m.DeepCopyInto(&c)
-	assert.Equal(t, m, c)
-
-	c.Set("name", "Jane")
-	assert.NotEqual(t, m, c)
 }

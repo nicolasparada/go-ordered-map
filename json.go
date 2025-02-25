@@ -1,4 +1,4 @@
-package orderedmap
+package omap
 
 import (
 	"bytes"
@@ -10,12 +10,12 @@ import (
 
 // MarshalJSON implements json.Marshaler interface
 // to marshall a sorted list of key-value pairs into an object.
-func (o OrderedMap[K, V]) MarshalJSON() ([]byte, error) {
-	if o == nil {
+func (om Map[K, V]) MarshalJSON() ([]byte, error) {
+	if om == nil {
 		return []byte(`null`), nil
 	}
 
-	if len(o) == 0 {
+	if len(om) == 0 {
 		return []byte(`{}`), nil
 	}
 
@@ -26,7 +26,7 @@ func (o OrderedMap[K, V]) MarshalJSON() ([]byte, error) {
 
 	enc := json.NewEncoder(&buf)
 	enc.SetEscapeHTML(false)
-	for i, p := range o {
+	for i, p := range om {
 		if i != 0 {
 			if err := buf.WriteByte(','); err != nil {
 				return nil, err
@@ -55,7 +55,7 @@ func (o OrderedMap[K, V]) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements json.Unmarshaler interface
 // to unmarshal an object into a sorted list of key-value pairs.
-func (o *OrderedMap[K, V]) UnmarshalJSON(data []byte) error {
+func (om *Map[K, V]) UnmarshalJSON(data []byte) error {
 	var m map[K]V
 	err := json.Unmarshal(data, &m)
 	if err != nil {
@@ -87,7 +87,7 @@ func (o *OrderedMap[K, V]) UnmarshalJSON(data []byte) error {
 			return fmt.Errorf("expected object key to be %T, got %T", key, t)
 		}
 
-		*o = append(*o, Pair[K, V]{
+		*om = append(*om, Pair[K, V]{
 			Key: key,
 			Val: m[key],
 		})

@@ -1,4 +1,4 @@
-[![Go Reference](https://pkg.go.dev/badge/github.com/nicolasparada/go-ordered-map.svg)](https://pkg.go.dev/github.com/nicolasparada/go-ordered-map)
+[![Go Reference](https://pkg.go.dev/badge/github.com/nicolasparada/go-omap.svg)](https://pkg.go.dev/github.com/nicolasparada/go-omap)
 
 # Golang Ordered Map
 
@@ -8,7 +8,7 @@ It also supports JSON and YAML marshalling.
 ## Installation
 
 ```bash
-go get github.com/nicolasparada/go-ordered-map
+go get github.com/nicolasparada/go-omap
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ go get github.com/nicolasparada/go-ordered-map
 package main
 
 import (
-	orderedmap "github.com/nicolasparada/go-ordered-map"
+	omap "github.com/nicolasparada/go-omap"
 )
 
 func main() {
@@ -28,7 +28,7 @@ func main() {
 		panic(err)
 	}
 
-	var ordered orderedmap.OrderedMap[string, any]
+	var ordered omap.Map[string, any]
 	if err := json.Unmarshal(data, &ordered); err != nil {
 		panic(err)
 	}
